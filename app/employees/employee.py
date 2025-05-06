@@ -2,25 +2,44 @@ import sys
 import os
 from dotenv import load_dotenv
 
-# Caminho absoluto até a raiz do projeto
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-sys.path.insert(0, BASE_DIR)
+# Adiciona a pasta app/ ao sys.path
+CURRENT_DIR = os.path.dirname(__file__)
+APP_DIR = os.path.abspath(os.path.join(CURRENT_DIR, '..'))
+sys.path.insert(0, APP_DIR)
 
+# Agora os imports funcionam
 from tools.rpc import OdooRPC
-from services.employees import list_all_employees
+
+
 
 
 # Carrega variáveis do .env
 load_dotenv()
 
-URL = os.getenv("ODOO_URL")
-DB_NAME = os.getenv("ODOO_DB_NAME")
-USERNAME = os.getenv("ODOO_USERNAME")
-PASSWORD = os.getenv("ODOO_PASSWORD")
+URL = os.getenv("URL")
+DB_NAME = os.getenv("DB_NAME")
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
 
 # Conecta com o Odoo
 session = OdooRPC(URL, DB_NAME, USERNAME, PASSWORD)
 session.connect()
+
+def list_all_employees(session):
+    """
+    Retorna todos os funcionários com informações úteis.
+    """
+    employee_obj = session['hr.employee']
+    fields = [
+        'name',
+        'work_email',
+        'work_phone',
+        'job_id',
+        'department_id',
+        'birthday',
+        'active',
+    ]
+    return employee_obj.search_read([], fields=fields)
 
 # Busca e exibe todos os funcionários
 employees = list_all_employees(session)

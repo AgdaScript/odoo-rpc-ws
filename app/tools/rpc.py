@@ -17,7 +17,9 @@ class OdooRPC:
 
     #Autentica e conecta com o odoo via rpc 
     def connect(self):
-        common = xmlrpc.ServerProxy('{}/xmlrpc/2/common'.format(self.server))
+        #common = xmlrpc.ServerProxy('{}/xmlrpc/2/common'.format(self.server))
+        common = xmlrpc.ServerProxy('{}/xmlrpc/2/common'.format(self.server), allow_none=True)
+
         self.uid = common.authenticate(self.database, self.username, self.password, {})
         self.models = xmlrpc.ServerProxy('{}/xmlrpc/2/object'.format(self.server), allow_none=True)
         #se autenticado com sucesso cria um objeto para o user autenticado
