@@ -19,3 +19,24 @@ app/
 │   └── birthday.py        # Script que chama os serviços e roda o relatório
 │
 └── main.py                # Ponto de entrada, se quiser orquestrar tudo
+
+
+
+app/
+├── services/
+│   ├── birthday-service.py
+│   ├── employee.py
+│   └── partners.py
+└── tools/
+    ├── odoo-conection.py
+    ├── odoo-rpc.py
+    └── odoo-session.py
+
+
+app/
+├── scripts/
+│   └── partners_script.py
+├── services/
+│   └── partners.py
+├── tools/
+│   └── odoo_session.py

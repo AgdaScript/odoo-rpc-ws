@@ -1,6 +1,6 @@
 # tools/rpc.py
 import xmlrpc.client as xmlrpc
-from tools.odoo import OdooObject, OdooEnvironment
+from tools.odoo_conection import OdooObject, OdooEnvironment
 
 
 class OdooRPC:
