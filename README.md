@@ -40,3 +40,32 @@ app/
 │   └── partners.py
 ├── tools/
 │   └── odoo_session.py
+
+
+ Frontend (com Infinite Scroll):
+Manda um request inicial com "direction": "center" e a center_date
+
+Ao rolar para baixo:
+
+Atualiza a center_date para o último item visível
+
+Chama a API com "direction": "next"
+
+Ao rolar para cima:
+
+Atualiza a center_date para o primeiro item visível
+
+Chama a API com "direction": "previous"
+
+
+app/
+├── api/
+│   └── birthday.py
+├── services/
+│   └── birthday_service.py
+├── tools/
+│   └── lazy_loader.py
+└── main.py
+
+
+pip install fastapi

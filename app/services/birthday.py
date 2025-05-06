@@ -1,27 +1,21 @@
-from datetime import datetime
+from tools.lazy_loader import build_date_range
 from tools.odoo_session import get_odoo_session
+from datetime import datetime
 
-def get_employees_with_birthday_in_month(month=None):
-    """
-    Retorna uma lista de funcionários com aniversários no mês especificado.
-    
-    :param month: Mês para procurar aniversariantes (ex: 1 para Janeiro, 2 para Fevereiro, etc.).
-                  Se None, retorna todos os aniversariantes do ano.
-    """
+def get_employees_by_birthday(month: int, day: int, direction="center", days=14):
     session = get_odoo_session()
-    employee_obj = session['hr.employee']
-    
-    # Se não for passado mês, busca todos os aniversariantes
-    today = datetime.today()
-    month = month or today.month
+    employee = session['hr.employee']
 
-    # Busca todos os funcionários
-    all_employees = employee_obj.search_read([], fields=['name', 'birthday', 'work_email'])
+    # Define intervalo de datas
+    center_date = datetime(datetime.now().year, month, day)
+    start, end = build_date_range(center_date, days, direction)
 
-    # Filtra aniversariantes do mês
-    birthday_employees = [
-        emp for emp in all_employees
-        if emp.get('birthday') and datetime.strptime(emp['birthday'], '%Y-%m-%d').month == month
-    ]
-    
-    return birthday_employees
+    # Formata para strings 'MM-DD'
+    start_str = start.strftime('%m-%d')
+    end_str = end.strftime('%m-%d')
+
+    # Filtro em string porque birthday é tipo char 'YYYY-MM-DD'
+    domain = [('birthday', '>=', f'0000-{start_str}'), ('birthday', '<=', f'9999-{end_str}')]
+
+    fields = ['name', 'birthday', 'job_id', 'department_id']
+    return employee.search_read(domain, fields=fields)
