@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from services.birthday import get_employees_by_birthday
+from app.services.birthday_service import get_employees_by_birthday
 
 router = APIRouter()
 

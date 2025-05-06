@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import sys
 
@@ -6,7 +7,7 @@ CURRENT_DIR = os.path.dirname(__file__)
 BASE_DIR = os.path.abspath(os.path.join(CURRENT_DIR, '..'))
 sys.path.insert(0, BASE_DIR)
 
-from services.birthday import get_employees_with_birthday_in_month
+from services.birthday_service import get_employees_by_birthday
 
 def print_birthday_employees(employees):
     if not employees:
@@ -15,13 +16,16 @@ def print_birthday_employees(employees):
         for emp in employees:
             print(f"Nome: {emp['name']}")
             print(f"Email: {emp.get('work_email', '---')}")
-            print(f"Data de Nascimento: {emp.get('birthday', '---')}")
+            birthday = emp.get('birthday')
+            birthday_date = datetime.strptime(birthday, '%Y-%m-%d')  # Odoo retorna data no formato YYYY-MM-DD
+            day_month = birthday_date.strftime('%d-%m')
+            print(f"Dia Aniversario: {day_month}")
             print('-' * 40)
 
 if __name__ == '__main__':
     try:
-        # Pode passar o mês aqui, ex: 1 para Janeiro
-        birthday_employees = get_employees_with_birthday_in_month()
+        # Obtém todos os aniversariantes para o dia 14 de maio
+        birthday_employees = get_employees_by_birthday(5, 14)
         print_birthday_employees(birthday_employees)
     except Exception as e:
         print(f"Erro ao listar aniversariantes: {e}")
