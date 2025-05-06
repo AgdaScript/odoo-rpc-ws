@@ -16,10 +16,19 @@ def print_birthday_employees(employees):
         for emp in employees:
             print(f"Nome: {emp['name']}")
             print(f"Email: {emp.get('work_email', '---')}")
+            
             birthday = emp.get('birthday')
-            birthday_date = datetime.strptime(birthday, '%Y-%m-%d')  # Odoo retorna data no formato YYYY-MM-DD
-            day_month = birthday_date.strftime('%d-%m')
-            print(f"Dia Aniversario: {day_month}")
+            if birthday:
+                try:
+                    # Convertendo a data de nascimento para o formato desejado
+                    birthday_date = datetime.strptime(birthday, '%Y-%m-%d')  # Odoo retorna data no formato YYYY-MM-DD
+                    day_month = birthday_date.strftime('%d-%m')  # Formato dia-mês
+                    print(f"Dia Aniversário: {day_month}")
+                except ValueError:
+                    print(f"Data de aniversário inválida para {emp['name']}")
+            else:
+                print(f"Dia Aniversário: ---")
+            
             print('-' * 40)
 
 if __name__ == '__main__':
