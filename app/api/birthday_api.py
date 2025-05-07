@@ -1,21 +1,32 @@
 from fastapi import FastAPI, HTTPException
 from services.birthday_service import get_employees_by_birthday
+from datetime import datetime
 
 app = FastAPI()
 
-# Endpoint para pegar aniversariantes com base no filtro de mês e dia
 @app.get("/birthdays")
-async def get_birthday_employees(month: int, day: int):
+async def get_all_birthdays():
     try:
-        # Filtra os aniversariantes com base no mês e dia fornecido
-        employees = get_employees_by_birthday(month, day)
-        
-        if not employees:
-            raise HTTPException(status_code=404, detail="Nenhum aniversariante encontrado.")
-        
-        # Retorna os aniversariantes
-        return [{"name": emp['name'], "birthday": emp['birthday']} for emp in employees]
-    
+        employees = get_employees_by_birthday()
+        return [{"name": emp["name"], "birthday": emp["birthday"]} for emp in employees]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.get("/birthdays/{month}")
+async def get_birthdays_by_month(month: int):
+    try:
+        employees = get_employees_by_birthday(month=month)
+        return [{"name": emp["name"], "birthday": emp["birthday"]} for emp in employees]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/birthdays/{month}/{day}")
+async def get_birthdays_by_month_day(month: int, day: int):
+    try:
+        employees = get_employees_by_birthday(month=month, day=day)
+        return [{"name": emp["name"], "birthday": emp["birthday"]} for emp in employees]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+ 
